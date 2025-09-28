@@ -2,6 +2,7 @@ import React from 'react';
 import BootstrapProvider from "../components/BootstrapProvider";
 import SwrProvider from "../components/SwrProvider";
 import ActivityProvider from "../components/ActivityProvider";
+import AuthProvider from "../components/AuthProvider";
 import Sidebar from "../components/Sidebar";
 
 const Layout = ({ children }) => {
@@ -24,9 +25,11 @@ export default function RootLayout({ children }) {
             <body>
                 <BootstrapProvider>
                     <SwrProvider>
-                        <ActivityProvider>
-                            <Layout>{children}</Layout>
-                        </ActivityProvider>
+                        <AuthProvider>
+                            <ActivityProvider>
+                                <Layout>{children}</Layout>
+                            </ActivityProvider>
+                        </AuthProvider>
                     </SwrProvider>
                 </BootstrapProvider>
             </body>

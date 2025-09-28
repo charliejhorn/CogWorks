@@ -32,24 +32,32 @@ function FocusTrap({ onClose, children }) {
 
 export default function ActivityProvider({ children }) {
 	const [stack, setStack] = useState([]);
-	const open = useCallback((Node, props = {}) => setStack((s) => [...s, { Node, props }]), []);
-	const closeTop = useCallback(() => setStack((s) => s.slice(0, -1)), []);
+	const open = useCallback((Node, props = {}) => {
+		setStack((s) => [...s, { Node, props }]);
+		setAnnounce("overlay opened");
+	}, []);
+	const closeTop = useCallback(() => {
+		setStack((s) => s.slice(0, -1));
+		setAnnounce("overlay closed");
+	}, []);
 	const value = useMemo(() => ({ open, closeTop }), [open, closeTop]);
+	const [announce, setAnnounce] = useState("");
 
 	return (
-		<ActivityCtx.Provider value={value}>
-			{children}
-			<div id="activity-root" aria-live="polite">
-				{stack.map(({ Node, props }, i) => (
+			<ActivityCtx.Provider value={value}>
+				{children}
+				<div aria-live="polite" className="visually-hidden">{announce}</div>
+				<div id="activity-root" aria-live="polite">
+					{stack.map(({ Node, props }, i) => (
 					<div key={i} role="dialog" aria-modal className="modal d-block" tabIndex={-1}>
 						<div className="modal-dialog modal-lg">
-							<div className="modal-content">
-								<FocusTrap onClose={closeTop}>
-									<div className="modal-body">
-										<Node {...props} onClose={closeTop} />
-									</div>
-								</FocusTrap>
-							</div>
+								<div className="modal-content">
+									<FocusTrap onClose={closeTop}>
+										<div className="modal-body">
+											<Node {...props} onClose={closeTop} />
+										</div>
+									</FocusTrap>
+								</div>
 						</div>
 						<div className="modal-backdrop show" onClick={closeTop} />
 					</div>

@@ -23,6 +23,7 @@ export default async function HomePage() {
         'SKU BRK-1001 low stock',
         '#1215 paused',
     ];
+
     return (
         <div className="container-fluid">
             <div className="d-flex align-items-center justify-content-between mb-3">

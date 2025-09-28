@@ -12,6 +12,10 @@ export default function Sidebar() {
 			<Link className="btn btn-light text-start" href="/customers">Customers</Link>
 			<Link className="btn btn-light text-start" href="/inventory">Inventory</Link>
 			<Link className="btn btn-light text-start" href="/timetable">Timetable</Link>
+			<div className="mt-auto pt-3">
+				<a className="btn btn-link p-0 me-3" href="/login">Sign in</a>
+				<a className="btn btn-link p-0" href="/signup">Sign up</a>
+			</div>
 		</nav>
 	);
 }

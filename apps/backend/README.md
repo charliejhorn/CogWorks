@@ -1,58 +1,88 @@
 # CogWorks Backend
 
-Welcome to the CogWorks Backend! This is the backend component of the CogWorks Workshop Management System, built using Express.js. This document provides an overview of the backend setup, usage, and development guidelines.
+Express + Firestore Admin backend for CogWorks. Implements REST endpoints, JWT auth, and SSE updates for job status.
 
-## Installation
+## Prerequisites
 
-To get started with the backend, follow these steps:
+- Node 18+
+- Firestore project credentials (service account JSON or ADC)
 
-1. Clone the repository:
-   ```
-   git clone <repository-url>
-   ```
+## Setup
 
-2. Navigate to the backend directory:
-   ```
-   cd apps/backend
-   ```
-
-3. Install the dependencies:
-   ```
-   npm install
-   ```
-
-## Running the Application
-
-To run the backend server, use the following command:
-
+1) Install deps
 ```
-npm start
+npm install
 ```
 
-The server will start on the default port (usually 3000). You can change the port by modifying the configuration in `src/index.js`.
+2) Configure environment
+Copy `.env.example` to `.env` and set values.
 
-## API Endpoints
+3) Run
+```
+npm run dev
+```
 
-The backend provides several API endpoints for managing workshop data. Refer to the documentation in the `src/routes/index.js` file for a complete list of available endpoints and their usage.
+Server defaults to `PORT=4000`.
+
+## Environment variables
+
+- PORT
+- CORS_ORIGIN
+- FIRESTORE_PROJECT_ID
+- FIREBASE_SERVICE_ACCOUNT (base64 of service account json) or GOOGLE_APPLICATION_CREDENTIALS
+- JWT_ACCESS_SECRET, JWT_REFRESH_SECRET
+- ACCESS_TOKEN_TTL (seconds), REFRESH_TOKEN_TTL (seconds)
+- SSE_HEARTBEAT_MS (default 15000)
+- TIMETABLE_SLOT_MIN (default 60)
+ 
+
+## API Overview
+
+Base path: `/api`
+
+- Auth
+  - POST `/auth/login` { email, password }
+  - POST `/auth/refresh`
+  - POST `/auth/logout`
+- Customers: GET/POST/PATCH `/customers`, GET `/customers/:id`
+- Mechanics: GET/POST/PATCH `/mechanics`, GET `/mechanics/:id`
+- Inventory: GET/POST/PATCH `/inventory`, GET `/inventory/:id`
+- Jobs: GET/POST/PATCH `/jobs`, GET `/jobs/:id`, POST `/jobs/:id/status`
+- Timetable: GET `/timetable?date=YYYY-MM-DD`
+- SSE: GET `/events`
+
+All write endpoints validate payloads and ignore unknown fields.
+
+## Notes
+
+- Firestore is lazily initialized. If credentials are missing, resource routes will return 503.
+- SSE sends a heartbeat comment every `SSE_HEARTBEAT_MS`.
 
 ## Folder Structure
-
-The backend project is organized as follows:
 
 ```
 apps/backend
 ├── .github
 │   └── copilot-instructions.md
 ├── src
-│   ├── index.js          # Entry point for the Express application
-│   ├── routes            # Contains route definitions
+│   ├── index.js
+│   ├── lib
+│   │   ├── firebase.js
+│   │   ├── sse.js
+│   │   ├── validators.js
+│   │   └── errors.js
+│   ├── routes
+│   │   ├── index.js
+│   │   ├── customers.js
+│   │   ├── mechanics.js
+│   │   ├── inventory.js
+│   │   ├── jobs.js
+│   │   └── timetable.js
+│   ├── controllers
 │   │   └── index.js
-│   ├── controllers       # Contains business logic for handling requests
-│   │   └── index.js
-│   ├── models            # Defines data models
-│   │   └── index.js
-│   └── middleware        # Contains middleware functions
+│   └── middleware
+│       ├── auth.js
 │       └── errorHandler.js
-├── package.json          # Lists dependencies and scripts
-└── README.md             # Documentation for the backend
+├── package.json
+└── README.md
 ```

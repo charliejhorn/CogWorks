@@ -1,19 +1,23 @@
-// This file contains the controller functions that handle the business logic for the application, responding to requests from the routes. 
+// this file contains the controller functions that handle the business logic for the application, responding to requests from the routes. 
 
 const getWorkshops = (req, res) => {
-    // logic to retrieve workshops
+    // return placeholder list until implemented
+    res.json({ items: [] });
 };
 
 const createWorkshop = (req, res) => {
-    // logic to create a new workshop
+    // return not implemented placeholder
+    res.status(501).json({ error: 'not implemented' });
 };
 
 const updateWorkshop = (req, res) => {
-    // logic to update an existing workshop
+    // return not implemented placeholder
+    res.status(501).json({ error: 'not implemented' });
 };
 
 const deleteWorkshop = (req, res) => {
-    // logic to delete a workshop
+    // return not implemented placeholder
+    res.status(501).json({ error: 'not implemented' });
 };
 
 module.exports = {

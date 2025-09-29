@@ -23,6 +23,15 @@ function makeFetcher(getTokens, refresh) {
         };
 
         const endpoint = resolveEndpoint(url);
+
+        // check if the endpoint includes "jobs" for testing purposes
+        // if (String(endpoint).includes("jobs")) {
+        //     const err = new Error("test error: endpoint includes 'jobs'");
+        //     err.status = 400;
+        //     await new Promise((resolve) => setTimeout(resolve, 2000)); // delay for 2 seconds
+        //     throw err;
+        // }
+
         let res = await fetch(endpoint, {
             credentials: "include",
             ...opts,

@@ -116,7 +116,9 @@ export default function CreateJobPage() {
             <div className="container-fluid">
                 <div className="d-flex justify-content-between">
                     <h2>Create New Job</h2>
-                    <Link href={"/jobs"} className="btn btn-secondary"></Link>
+                    <Link href={"/jobs"} className="btn btn-secondary">
+                        View Jobs
+                    </Link>
                 </div>
                 <form onSubmit={handleSubmit}>
                     <div className="form-group mt-3">

@@ -21,12 +21,6 @@ export default function Sidebar() {
             <Link className="btn btn-light text-start" href="/jobs">
                 Jobs
             </Link>
-            <Link className="btn btn-light text-start" href="/customers">
-                Customers
-            </Link>
-            <Link className="btn btn-light text-start" href="/timetable">
-                Timetable
-            </Link>
             <div className="mt-auto pt-3">
                 <Link className="btn btn-light text-start" href="/logout">
                     Logout

@@ -6,8 +6,9 @@ import { useAuth } from "@/components/AuthProvider";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+    const [message, setMessage] = useState(null);
     const router = useRouter();
-    const { login, loading } = useAuth();
+    const { login, loading, user } = useAuth();
 
     const [formData, setFormData] = useState({
         email: "",
@@ -22,7 +23,7 @@ export default function LoginPage() {
             [name]: value,
         }));
 
-        // Clear error when user starts typing
+        // clear error when user starts typing
         if (errors[name]) {
             setErrors((prev) => ({
                 ...prev,
@@ -61,23 +62,25 @@ export default function LoginPage() {
                     data?.refreshToken &&
                     data?.user?.email == email
                 ) {
-                    router.push("/");
+                    setMessage("Logged in successfully!");
+                    // router.push("/");
                 }
             } catch (error) {
-                const newErrors = {};
-                switch (error) {
-                    case emailDoesntExist:
-                        newErrors.email = "Email doesn't exist";
-                        break;
+                // const newErrors = {};
+                // switch (error) {
+                //     case emailDoesntExist:
+                //         newErrors.email = "Email doesn't exist";
+                //         break;
 
-                    case passwordIncorrect:
-                        newErrors.password = "Password is incorrect";
-                        break;
+                //     case passwordIncorrect:
+                //         newErrors.password = "Password is incorrect";
+                //         break;
 
-                    default:
-                        console.log(error);
-                }
-                setErrors(newErrors);
+                //     default:
+                //         console.log(error);
+                // }
+                // setErrors(newErrors);
+                setMessage("Email or password is incorrect");
             }
         }
     };
@@ -140,6 +143,30 @@ export default function LoginPage() {
                             {loading ? "Logging in..." : "Log in"}
                         </button>
                     </form>
+
+                    {message && (
+                        <div
+                            className={`mt-3 alert ${
+                                message.includes("successful")
+                                    ? "alert-success"
+                                    : "alert-danger"
+                            }`}
+                        >
+                            {message}
+                        </div>
+                    )}
+
+                    {user && (
+                        <button
+                            type="button"
+                            className="btn btn-primary"
+                            onClick={(e) => {
+                                router.push("/");
+                            }}
+                        >
+                            Go to Home
+                        </button>
+                    )}
                 </div>
             </div>
         </>

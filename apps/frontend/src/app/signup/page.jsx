@@ -30,7 +30,6 @@ export default function SignUpPage() {
         confirmPassword: "",
     });
     const [errors, setErrors] = useState({});
-    // message should be a string or null to avoid rendering objects as React children
     const [message, setMessage] = useState(null);
 
     // trigger(payload) performs the mutation

@@ -2,8 +2,11 @@
 import React from "react";
 import { SWRConfig } from "swr";
 import { useAuth } from "./AuthProvider";
+import { useRouter } from "next/navigation";
 
 function makeFetcher(getTokens, refresh) {
+    const router = useRouter();
+    const { logout } = useAuth();
     return async function fetcher(url, opts = {}) {
         const tokens = getTokens();
         const token = tokens?.accessToken || null;
@@ -28,11 +31,12 @@ function makeFetcher(getTokens, refresh) {
 
         if (res.status === 401) {
             // attempt a single refresh if we have a refresh token and this isn't the refresh call
+            console.log("SWR fetch returned unauthorised.");
             const hasRefresh = !!getTokens()?.refreshToken;
             const isRefreshCall = String(url).includes("/api/auth/refresh");
             if (hasRefresh && !isRefreshCall) {
                 try {
-                    console.log("SWR attempting token refresh");
+                    console.log("SWR attempting token refresh.");
                     const refreshed = await refresh();
                     if (refreshed?.accessToken) {
                         const retryHeaders = {
@@ -45,9 +49,13 @@ function makeFetcher(getTokens, refresh) {
                             ...opts,
                             headers: retryHeaders,
                         });
+                    } else {
+                        console.log("SWR refresh failed");
+                        router.replace("/logout");
                     }
                 } catch (e) {
                     // swallow error and let non-ok handling throw below
+                    console.log("refresh try catch error");
                 }
             }
         }
@@ -57,6 +65,9 @@ function makeFetcher(getTokens, refresh) {
             const err = new Error("request failed");
             err.status = res.status;
             err.info = await res.json().catch(() => ({}));
+
+            router.replace("/logout");
+
             throw err;
         }
         return res.json();

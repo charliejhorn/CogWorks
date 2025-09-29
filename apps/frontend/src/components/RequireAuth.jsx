@@ -8,7 +8,7 @@ export default function RequireAuth({ children }) {
     const pathname = usePathname();
 
     // allow public pages through without auth
-    const publicPaths = ["/login", "/signup"];
+    const publicPaths = ["/login", "/signup", "/logout"];
     if (pathname && publicPaths.some((p) => pathname.startsWith(p))) {
         return children;
     }
@@ -18,17 +18,21 @@ export default function RequireAuth({ children }) {
         suspense: false,
     });
 
+    console.log(data ? data : error);
+
     useEffect(() => {
         if (!isLoading) {
             // redirect to login when not authenticated
-            if (error || (data && !data.user)) {
+            const email = data?.email ?? data?.user?.email;
+            if (error || !email) {
                 router.replace("/login");
             }
         }
     }, [isLoading, data, error, router]);
 
     if (isLoading) return <p>Authenticating...</p>;
-    if (error) return <p>Error: {error.message}</p>;
-    if (!data?.user) return null;
+    // when redirecting due to missing auth, avoid showing error flicker
+    const email = data?.email ?? data?.user?.email;
+    if (error || !email) return null;
     return children;
 }

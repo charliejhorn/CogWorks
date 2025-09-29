@@ -3,11 +3,11 @@ import React, {
     createContext,
     useCallback,
     useContext,
-    useEffect,
+    useRef,
     useState,
 } from "react";
 import { useLocalStorage } from "./hooks/useLocalStorage";
-import useSWR from "swr";
+// no swr usage here; keep provider lean
 
 const AuthCtx = createContext(null);
 export function useAuth() {
@@ -23,8 +23,12 @@ export default function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(false);
 
+    // coalesce concurrent refresh attempts
+    const refreshInflight = useRef(null);
+
     const login = useCallback(
         async (email, password) => {
+            console.log("logging in " + email);
             setLoading(true);
             try {
                 const res = await fetch(
@@ -78,26 +82,40 @@ export default function AuthProvider({ children }) {
         // if no refresh token, return null
         if (!tokens?.refreshToken) return null;
 
-        try {
-            const res = await fetch(
-                `${process.env.NEXT_PUBLIC_API_BASE}/api/auth/refresh`,
-                {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ refreshToken: tokens.refreshToken }),
-                }
-            );
-            if (!res.ok) return null;
-            const data = await res.json();
-            setTokens({
-                accessToken: data.accessToken,
-                refreshToken: data.refreshToken,
-            });
-            setUser(data.user || user);
-            return data;
-        } catch (err) {
-            return null;
+        // single-flight refresh
+        if (refreshInflight.current) {
+            return refreshInflight.current;
         }
+
+        refreshInflight.current = (async () => {
+            try {
+                const res = await fetch(
+                    `${process.env.NEXT_PUBLIC_API_BASE}/api/auth/refresh`,
+                    {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            refreshToken: tokens.refreshToken,
+                        }),
+                    }
+                );
+                if (!res.ok) return null;
+                const data = await res.json();
+                setTokens({
+                    accessToken: data.accessToken,
+                    refreshToken: data.refreshToken,
+                });
+                setUser(data.user || user);
+                return data;
+            } catch (err) {
+                return null;
+            } finally {
+                // release the single-flight promise
+                refreshInflight.current = null;
+            }
+        })();
+
+        return refreshInflight.current;
     }, [tokens, setTokens, user]);
 
     const value = { tokens, user, login, logout, refresh, loading, setTokens };

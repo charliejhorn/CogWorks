@@ -1,59 +1,55 @@
 "use client";
 import React from "react";
 import { SWRConfig } from "swr";
-import { useLocalStorage } from "./hooks/useLocalStorage";
+import { useAuth } from "./AuthProvider";
 
-function makeFetcher(getTokens, setTokens) {
+function makeFetcher(getTokens, refresh) {
     return async function fetcher(url, opts = {}) {
         const tokens = getTokens();
         const token = tokens?.accessToken || null;
         const headers = { ...(opts.headers || {}) };
         if (token) headers.Authorization = `Bearer ${token}`;
 
-        let res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}${url}`, {
+        // resolve full endpoint (support absolute URLs or relative keys)
+        const resolveEndpoint = (u) => {
+            if (!u) return u;
+            if (u.startsWith("http://") || u.startsWith("https://")) return u;
+            return `${process.env.NEXT_PUBLIC_API_BASE}${
+                u.startsWith("/") ? u : `/${u}`
+            }`;
+        };
+
+        const endpoint = resolveEndpoint(url);
+        let res = await fetch(endpoint, {
             credentials: "include",
             ...opts,
             headers,
         });
+
         if (res.status === 401) {
-            // try refresh once
-            try {
-                console.log("SWR attempting token refresh");
-                const refreshToken = tokens?.refreshToken;
-                if (refreshToken) {
-                    const r = await fetch(
-                        `${process.env.NEXT_PUBLIC_API_BASE}/api/auth/refresh`,
-                        {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ refreshToken }),
-                        }
-                    );
-                    if (r.ok) {
-                        const data = await r.json();
-                        setTokens({
-                            accessToken: data.accessToken,
-                            refreshToken: data.refreshToken,
-                        });
-                        // retry original request with new token
-                        const newHeaders = {
+            // attempt a single refresh if we have a refresh token and this isn't the refresh call
+            const hasRefresh = !!getTokens()?.refreshToken;
+            const isRefreshCall = String(url).includes("/api/auth/refresh");
+            if (hasRefresh && !isRefreshCall) {
+                try {
+                    console.log("SWR attempting token refresh");
+                    const refreshed = await refresh();
+                    if (refreshed?.accessToken) {
+                        const retryHeaders = {
                             ...(opts.headers || {}),
-                            Authorization: `Bearer ${data.accessToken}`,
+                            Authorization: `Bearer ${refreshed.accessToken}`,
                         };
-                        res = await fetch(url, {
+                        const retryEndpoint = resolveEndpoint(url);
+                        res = await fetch(retryEndpoint, {
                             credentials: "include",
                             ...opts,
-                            headers: newHeaders,
+                            headers: retryHeaders,
                         });
-                    } else {
-                        // redirect to /login if refresh fails
-                        window.location.href = "/login";
                     }
-                } else {
-                    // redirect to /login if no refresh token
-                    window.location.href = "/login";
+                } catch (e) {
+                    // swallow error and let non-ok handling throw below
                 }
-            } catch (e) {}
+            }
         }
 
         // if request was not successful and was not unauthorised
@@ -68,24 +64,31 @@ function makeFetcher(getTokens, setTokens) {
 }
 
 export default function SwrProvider({ children }) {
-    // read token from local storage using the shared hook
-    const [tokens, setTokens] = useLocalStorage("cogworks_tokens", {
-        accessToken: null,
-        refreshToken: null,
-    });
+    const { tokens, refresh, logout } = useAuth();
     const getTokens = () => tokens || { accessToken: null, refreshToken: null };
-
-    console.log("tokens:", tokens);
     return (
         <SWRConfig
             value={{
-                fetcher: makeFetcher(getTokens, setTokens),
+                fetcher: makeFetcher(getTokens, refresh),
                 suspense: true,
                 revalidateOnFocus: true,
                 shouldRetryOnError: (err) => err?.status >= 500,
                 errorRetryCount: 3,
-                fallback: {
-                    "/api/auth/me": { user: null },
+                // clear auth on 401; navigation is handled by RequireAuth
+                onError: (err) => {
+                    if (err?.status === 401 && typeof window !== "undefined") {
+                        if (!window.__cogworks_loggingOut) {
+                            window.__cogworks_loggingOut = true;
+                            Promise.resolve()
+                                .then(() => logout())
+                                .finally(() => {
+                                    // release the gate on the next tick
+                                    setTimeout(() => {
+                                        window.__cogworks_loggingOut = false;
+                                    }, 0);
+                                });
+                        }
+                    }
                 },
             }}
         >

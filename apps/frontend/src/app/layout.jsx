@@ -6,11 +6,11 @@ import React from "react";
 
 export default function RootLayout({ children }) {
     return (
-        <html lang="en">
+        <html lang="en" data-scroll-behavior="smooth">
             <body>
                 <BootstrapProvider>
-                    <SwrProvider>
-                        <AuthProvider>
+                    <AuthProvider>
+                        <SwrProvider>
                             {/* <React.Suspense
                                 fallback={
                                     <div className="p-3">authenticating…</div>
@@ -18,8 +18,8 @@ export default function RootLayout({ children }) {
                             > */}
                             <RequireAuth>{children}</RequireAuth>
                             {/* </React.Suspense> */}
-                        </AuthProvider>
-                    </SwrProvider>
+                        </SwrProvider>
+                    </AuthProvider>
                 </BootstrapProvider>
             </body>
         </html>

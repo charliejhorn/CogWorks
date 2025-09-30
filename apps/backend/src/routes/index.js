@@ -17,11 +17,7 @@ router.put("/workshops/:id", updateWorkshop);
 router.delete("/workshops/:id", deleteWorkshop);
 
 // mount resource routers
-router.use("/customers", require("./customers"));
-router.use("/mechanics", require("./mechanics"));
-router.use("/inventory", require("./inventory"));
 router.use("/jobs", require("./jobs"));
-router.use("/timetable", require("./timetable"));
 router.use("/auth", require("./auth"));
 
 // health check

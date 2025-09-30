@@ -22,21 +22,15 @@ const STATUS = [
     "cancelled",
 ];
 
-async function exists(col, id) {
-    if (!id) return false;
-    const doc = await db.collection(col).doc(id).get();
-    return doc.exists;
-}
-
 // list jobs (optional filters)
 router.get("/", async (req, res, next) => {
     try {
         let q = db.collection(COL).orderBy("createdAt", "desc");
         if (req.query.status) q = q.where("status", "==", req.query.status);
-        if (req.query.mechanicId)
-            q = q.where("mechanicId", "==", req.query.mechanicId);
-        if (req.query.customerId)
-            q = q.where("customerId", "==", req.query.customerId);
+        if (req.query.mechanic)
+            q = q.where("mechanic", "==", req.query.mechanic);
+        if (req.query.customer)
+            q = q.where("customer", "==", req.query.customer);
         const limit = Math.min(Number(req.query.limit || 50), 200);
         q = q.limit(limit);
         const snap = await q.get();
@@ -63,21 +57,17 @@ router.post("/", async (req, res, next) => {
     try {
         const allowed = [
             "title",
-            "customerId",
-            "mechanicId",
+            "customer",
+            "mechanic",
             "start",
             "end",
             "status",
             "notes",
         ];
         const data = allowOnly(req.body || {}, allowed);
-        const err = requireFields(data, ["title", "customerId"]);
+        const err = requireFields(data, ["title", "customer"]);
         if (err) return next(httpError(400, err));
         data.status = isEnum(data.status, STATUS) ? data.status : "queued";
-        if (!(await exists("customers", data.customerId)))
-            return next(httpError(400, "invalid customerId"));
-        if (data.mechanicId && !(await exists("mechanics", data.mechanicId)))
-            return next(httpError(400, "invalid mechanicId"));
         const now = Date.now();
         data.createdAt = now;
         data.updatedAt = now;
@@ -93,8 +83,8 @@ router.patch("/:id", async (req, res, next) => {
     try {
         const allowed = [
             "title",
-            "customerId",
-            "mechanicId",
+            "customer",
+            "mechanic",
             "start",
             "end",
             "status",
@@ -103,10 +93,6 @@ router.patch("/:id", async (req, res, next) => {
         const patch = allowOnly(req.body || {}, allowed);
         if (patch.status && !isEnum(patch.status, STATUS))
             return next(httpError(400, "invalid status"));
-        if (patch.customerId && !(await exists("customers", patch.customerId)))
-            return next(httpError(400, "invalid customerId"));
-        if (patch.mechanicId && !(await exists("mechanics", patch.mechanicId)))
-            return next(httpError(400, "invalid mechanicId"));
         if (!Object.keys(patch).length)
             return next(httpError(400, "no valid fields"));
         patch.updatedAt = Date.now();

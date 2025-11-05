@@ -22,7 +22,7 @@ default: &default
 
 development:
   <<: *default
-  database: test_appp_development
+  database: cog_works
 
   # The specified database role being used to connect to PostgreSQL.
   # To create additional roles in PostgreSQL see `$ createuser --help`.

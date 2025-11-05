@@ -1,57 +1,24 @@
-# CogWorks - Workshop Management System
+# README
 
-CogWorks is a comprehensive Workshop Management System designed to streamline the management of workshops, including scheduling, participant registration, and resource allocation. This project is built using JavaScript technologies, with Next.js for the frontend and Express for the backend.
+This README would normally document whatever steps are necessary to get the
+application up and running.
 
-## Project Structure
+Things you may want to cover:
 
-The project is organized into two main applications: the frontend and the backend.
+* Ruby version
 
-### Frontend
+* System dependencies
 
-- **Framework**: Next.js (v15)
-- **Library**: React (v19)
-- **Directory**: `apps/frontend`
+* Configuration
 
-### Backend
+* Database creation
 
-- **Framework**: Express
-- **Directory**: `apps/backend`
-- **Key Files**:
+* Database initialization
 
-## Getting Started
+* How to run the test suite
 
-To get started with the CogWorks project, follow these steps:
+* Services (job queues, cache servers, search engines, etc.)
 
-1. **Clone the Repository**:
-   ```bash
-   git clone <repository-url>
-   cd CogWorks
-   ```
+* Deployment instructions
 
-2. **Install Dependencies**:
-   - For the frontend:
-     ```bash
-     cd apps/frontend
-     npm install
-     ```
-   - For the backend:
-     ```bash
-     cd ../backend
-     npm install
-     ```
-
-3. **Run the Applications**:
-   - Start the backend server:
-     ```bash
-     cd apps/backend
-     npm start
-     ```
-   - Start the frontend application:
-     ```bash
-     cd apps/frontend
-     npm run dev
-     ```
-
-## License
-
-This project is licensed under the MIT License. See the LICENSE file for more details.
+* ...

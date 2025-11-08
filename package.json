@@ -1,0 +1,28 @@
+{
+  "name": "cogworks",
+  "version": "1.0.0",
+  "description": "This README would normally document whatever steps are necessary to get the application up and running.",
+  "main": "app/javascript/application.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "rails s"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/charliejhorn/CogWorks.git"
+  },
+  "author": "Charlie Horn, Lily Ha",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/charliejhorn/CogWorks/issues"
+  },
+  "homepage": "https://github.com/charliejhorn/CogWorks#readme",
+  "devDependencies": {
+    "@prettier/plugin-ruby": "^4.0.4",
+    "prettier": "^3.6.2"
+  }
+}

@@ -7,3 +7,12 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+ActiveRecord::Base.transaction do
+    hannah =
+        Customer.create!(
+            { name: "Hannah", email: "hannah@gmail.com", phone: "04123456789" }
+        )
+
+    norco = hannah.bikes.create!({ description: "red norco" })
+end

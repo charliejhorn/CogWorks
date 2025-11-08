@@ -1,11 +1,11 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  due_date: 2025-11-08 14:11:46
-  cost: 1.5
-  status: MyString
+    due_date: 2025-11-08 14:11:46
+    cost: 1.5
+    status: MyString
 
 two:
-  due_date: 2025-11-08 14:11:46
-  cost: 1.5
-  status: MyString
+    due_date: 2025-11-08 14:11:46
+    cost: 1.5
+    status: MyString

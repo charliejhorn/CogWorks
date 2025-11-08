@@ -1,58 +1,58 @@
 require "test_helper"
 
 class JobsControllerTest < ActionDispatch::IntegrationTest
-  setup { @job = jobs(:one) }
+    setup { @job = jobs(:one) }
 
-  test "should get index" do
-    get jobs_url
-    assert_response :success
-  end
-
-  test "should get new" do
-    get new_job_url
-    assert_response :success
-  end
-
-  test "should create job" do
-    assert_difference("Job.count") do
-      post jobs_url,
-           params: {
-             job: {
-               cost: @job.cost,
-               due_date: @job.due_date,
-               status: @job.status
-             }
-           }
+    test "should get index" do
+        get jobs_url
+        assert_response :success
     end
 
-    assert_redirected_to job_url(Job.last)
-  end
+    test "should get new" do
+        get new_job_url
+        assert_response :success
+    end
 
-  test "should show job" do
-    get job_url(@job)
-    assert_response :success
-  end
+    test "should create job" do
+        assert_difference("Job.count") do
+            post jobs_url,
+                      params: {
+                          job: {
+                              cost: @job.cost,
+                              due_date: @job.due_date,
+                              status: @job.status
+                          }
+                      }
+        end
 
-  test "should get edit" do
-    get edit_job_url(@job)
-    assert_response :success
-  end
+        assert_redirected_to job_url(Job.last)
+    end
 
-  test "should update job" do
-    patch job_url(@job),
-          params: {
-            job: {
-              cost: @job.cost,
-              due_date: @job.due_date,
-              status: @job.status
-            }
-          }
-    assert_redirected_to job_url(@job)
-  end
+    test "should show job" do
+        get job_url(@job)
+        assert_response :success
+    end
 
-  test "should destroy job" do
-    assert_difference("Job.count", -1) { delete job_url(@job) }
+    test "should get edit" do
+        get edit_job_url(@job)
+        assert_response :success
+    end
 
-    assert_redirected_to jobs_url
-  end
+    test "should update job" do
+        patch job_url(@job),
+                    params: {
+                        job: {
+                            cost: @job.cost,
+                            due_date: @job.due_date,
+                            status: @job.status
+                        }
+                    }
+        assert_redirected_to job_url(@job)
+    end
+
+    test "should destroy job" do
+        assert_difference("Job.count", -1) { delete job_url(@job) }
+
+        assert_redirected_to jobs_url
+    end
 end

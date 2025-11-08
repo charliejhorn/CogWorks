@@ -1,9 +1,7 @@
 require "test_helper"
 
 class BikesControllerTest < ActionDispatch::IntegrationTest
-  setup do
-    @bike = bikes(:one)
-  end
+  setup { @bike = bikes(:one) }
 
   test "should get index" do
     get bikes_url
@@ -39,9 +37,7 @@ class BikesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy bike" do
-    assert_difference("Bike.count", -1) do
-      delete bike_url(@bike)
-    end
+    assert_difference("Bike.count", -1) { delete bike_url(@bike) }
 
     assert_redirected_to bikes_url
   end

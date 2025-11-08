@@ -1,5 +1,5 @@
 class RolesController < ApplicationController
-  before_action :set_role, only: %i[ show edit update destroy ]
+  before_action :set_role, only: %i[show edit update destroy]
 
   # GET /roles or /roles.json
   def index
@@ -25,7 +25,9 @@ class RolesController < ApplicationController
 
     respond_to do |format|
       if @role.save
-        format.html { redirect_to @role, notice: "Role was successfully created." }
+        format.html do
+          redirect_to @role, notice: "Role was successfully created."
+        end
         format.json { render :show, status: :created, location: @role }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -38,7 +40,11 @@ class RolesController < ApplicationController
   def update
     respond_to do |format|
       if @role.update(role_params)
-        format.html { redirect_to @role, notice: "Role was successfully updated.", status: :see_other }
+        format.html do
+          redirect_to @role,
+                      notice: "Role was successfully updated.",
+                      status: :see_other
+        end
         format.json { render :show, status: :ok, location: @role }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -52,19 +58,24 @@ class RolesController < ApplicationController
     @role.destroy!
 
     respond_to do |format|
-      format.html { redirect_to roles_path, notice: "Role was successfully destroyed.", status: :see_other }
+      format.html do
+        redirect_to roles_path,
+                    notice: "Role was successfully destroyed.",
+                    status: :see_other
+      end
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_role
-      @role = Role.find(params.expect(:id))
-    end
 
-    # Only allow a list of trusted parameters through.
-    def role_params
-      params.expect(role: [ :name, :description ])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_role
+    @role = Role.find(params.expect(:id))
+  end
+
+  # Only allow a list of trusted parameters through.
+  def role_params
+    params.expect(role: %i[name description])
+  end
 end

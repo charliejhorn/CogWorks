@@ -1,9 +1,7 @@
 require "application_system_test_case"
 
 class NotesTest < ApplicationSystemTestCase
-  setup do
-    @note = notes(:one)
-  end
+  setup { @note = notes(:one) }
 
   test "visiting the index" do
     visit notes_url

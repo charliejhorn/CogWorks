@@ -1,9 +1,7 @@
 require "test_helper"
 
 class NotesControllerTest < ActionDispatch::IntegrationTest
-  setup do
-    @note = notes(:one)
-  end
+  setup { @note = notes(:one) }
 
   test "should get index" do
     get notes_url
@@ -39,9 +37,7 @@ class NotesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy note" do
-    assert_difference("Note.count", -1) do
-      delete note_url(@note)
-    end
+    assert_difference("Note.count", -1) { delete note_url(@note) }
 
     assert_redirected_to notes_url
   end

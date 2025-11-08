@@ -1,0 +1,11 @@
+# Ignore files that Prettier cannot parse
+*.keep
+node_modules/
+log/
+tmp/
+vendor/
+storage/
+.git/
+.github/
+.kamal/
+.DS_Store

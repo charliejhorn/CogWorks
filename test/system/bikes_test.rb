@@ -1,9 +1,7 @@
 require "application_system_test_case"
 
 class BikesTest < ApplicationSystemTestCase
-  setup do
-    @bike = bikes(:one)
-  end
+  setup { @bike = bikes(:one) }
 
   test "visiting the index" do
     visit bikes_url

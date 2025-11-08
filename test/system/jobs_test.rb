@@ -1,9 +1,7 @@
 require "application_system_test_case"
 
 class JobsTest < ApplicationSystemTestCase
-  setup do
-    @job = jobs(:one)
-  end
+  setup { @job = jobs(:one) }
 
   test "visiting the index" do
     visit jobs_url

@@ -9,7 +9,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "rails s"
+    "dev": "rails s",
+    "prettier": "./node_modules/.bin/prettier --plugin=@prettier/plugin-ruby --write '**/*.{rb,js,css,json,yml,yaml,md}'"
   },
   "repository": {
     "type": "git",

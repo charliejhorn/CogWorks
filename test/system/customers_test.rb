@@ -1,9 +1,7 @@
 require "application_system_test_case"
 
 class CustomersTest < ApplicationSystemTestCase
-  setup do
-    @customer = customers(:one)
-  end
+  setup { @customer = customers(:one) }
 
   test "visiting the index" do
     visit customers_url

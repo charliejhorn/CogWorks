@@ -1,5 +1,5 @@
 class CustomersController < ApplicationController
-  before_action :set_customer, only: %i[ show edit update destroy ]
+  before_action :set_customer, only: %i[show edit update destroy]
 
   # GET /customers or /customers.json
   def index
@@ -25,11 +25,15 @@ class CustomersController < ApplicationController
 
     respond_to do |format|
       if @customer.save
-        format.html { redirect_to @customer, notice: "Customer was successfully created." }
+        format.html do
+          redirect_to @customer, notice: "Customer was successfully created."
+        end
         format.json { render :show, status: :created, location: @customer }
       else
         format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @customer.errors, status: :unprocessable_entity }
+        format.json do
+          render json: @customer.errors, status: :unprocessable_entity
+        end
       end
     end
   end
@@ -38,11 +42,17 @@ class CustomersController < ApplicationController
   def update
     respond_to do |format|
       if @customer.update(customer_params)
-        format.html { redirect_to @customer, notice: "Customer was successfully updated.", status: :see_other }
+        format.html do
+          redirect_to @customer,
+                      notice: "Customer was successfully updated.",
+                      status: :see_other
+        end
         format.json { render :show, status: :ok, location: @customer }
       else
         format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @customer.errors, status: :unprocessable_entity }
+        format.json do
+          render json: @customer.errors, status: :unprocessable_entity
+        end
       end
     end
   end
@@ -52,19 +62,24 @@ class CustomersController < ApplicationController
     @customer.destroy!
 
     respond_to do |format|
-      format.html { redirect_to customers_path, notice: "Customer was successfully destroyed.", status: :see_other }
+      format.html do
+        redirect_to customers_path,
+                    notice: "Customer was successfully destroyed.",
+                    status: :see_other
+      end
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_customer
-      @customer = Customer.find(params.expect(:id))
-    end
 
-    # Only allow a list of trusted parameters through.
-    def customer_params
-      params.expect(customer: [ :name, :email, :phone ])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_customer
+    @customer = Customer.find(params.expect(:id))
+  end
+
+  # Only allow a list of trusted parameters through.
+  def customer_params
+    params.expect(customer: %i[name email phone])
+  end
 end

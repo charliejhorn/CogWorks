@@ -1,5 +1,5 @@
 class BikesController < ApplicationController
-  before_action :set_bike, only: %i[ show edit update destroy ]
+  before_action :set_bike, only: %i[show edit update destroy]
 
   # GET /bikes or /bikes.json
   def index
@@ -25,7 +25,9 @@ class BikesController < ApplicationController
 
     respond_to do |format|
       if @bike.save
-        format.html { redirect_to @bike, notice: "Bike was successfully created." }
+        format.html do
+          redirect_to @bike, notice: "Bike was successfully created."
+        end
         format.json { render :show, status: :created, location: @bike }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -38,7 +40,11 @@ class BikesController < ApplicationController
   def update
     respond_to do |format|
       if @bike.update(bike_params)
-        format.html { redirect_to @bike, notice: "Bike was successfully updated.", status: :see_other }
+        format.html do
+          redirect_to @bike,
+                      notice: "Bike was successfully updated.",
+                      status: :see_other
+        end
         format.json { render :show, status: :ok, location: @bike }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -52,19 +58,24 @@ class BikesController < ApplicationController
     @bike.destroy!
 
     respond_to do |format|
-      format.html { redirect_to bikes_path, notice: "Bike was successfully destroyed.", status: :see_other }
+      format.html do
+        redirect_to bikes_path,
+                    notice: "Bike was successfully destroyed.",
+                    status: :see_other
+      end
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_bike
-      @bike = Bike.find(params.expect(:id))
-    end
 
-    # Only allow a list of trusted parameters through.
-    def bike_params
-      params.expect(bike: [ :description ])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_bike
+    @bike = Bike.find(params.expect(:id))
+  end
+
+  # Only allow a list of trusted parameters through.
+  def bike_params
+    params.expect(bike: [:description])
+  end
 end

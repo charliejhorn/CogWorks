@@ -1,9 +1,7 @@
 require "test_helper"
 
 class JobsControllerTest < ActionDispatch::IntegrationTest
-  setup do
-    @job = jobs(:one)
-  end
+  setup { @job = jobs(:one) }
 
   test "should get index" do
     get jobs_url
@@ -17,7 +15,14 @@ class JobsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create job" do
     assert_difference("Job.count") do
-      post jobs_url, params: { job: { cost: @job.cost, due_date: @job.due_date, status: @job.status } }
+      post jobs_url,
+           params: {
+             job: {
+               cost: @job.cost,
+               due_date: @job.due_date,
+               status: @job.status
+             }
+           }
     end
 
     assert_redirected_to job_url(Job.last)
@@ -34,14 +39,19 @@ class JobsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update job" do
-    patch job_url(@job), params: { job: { cost: @job.cost, due_date: @job.due_date, status: @job.status } }
+    patch job_url(@job),
+          params: {
+            job: {
+              cost: @job.cost,
+              due_date: @job.due_date,
+              status: @job.status
+            }
+          }
     assert_redirected_to job_url(@job)
   end
 
   test "should destroy job" do
-    assert_difference("Job.count", -1) do
-      delete job_url(@job)
-    end
+    assert_difference("Job.count", -1) { delete job_url(@job) }
 
     assert_redirected_to jobs_url
   end

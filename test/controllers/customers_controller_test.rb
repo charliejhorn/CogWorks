@@ -1,9 +1,7 @@
 require "test_helper"
 
 class CustomersControllerTest < ActionDispatch::IntegrationTest
-  setup do
-    @customer = customers(:one)
-  end
+  setup { @customer = customers(:one) }
 
   test "should get index" do
     get customers_url
@@ -17,7 +15,14 @@ class CustomersControllerTest < ActionDispatch::IntegrationTest
 
   test "should create customer" do
     assert_difference("Customer.count") do
-      post customers_url, params: { customer: { email: @customer.email, name: @customer.name, phone: @customer.phone } }
+      post customers_url,
+           params: {
+             customer: {
+               email: @customer.email,
+               name: @customer.name,
+               phone: @customer.phone
+             }
+           }
     end
 
     assert_redirected_to customer_url(Customer.last)
@@ -34,14 +39,19 @@ class CustomersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update customer" do
-    patch customer_url(@customer), params: { customer: { email: @customer.email, name: @customer.name, phone: @customer.phone } }
+    patch customer_url(@customer),
+          params: {
+            customer: {
+              email: @customer.email,
+              name: @customer.name,
+              phone: @customer.phone
+            }
+          }
     assert_redirected_to customer_url(@customer)
   end
 
   test "should destroy customer" do
-    assert_difference("Customer.count", -1) do
-      delete customer_url(@customer)
-    end
+    assert_difference("Customer.count", -1) { delete customer_url(@customer) }
 
     assert_redirected_to customers_url
   end

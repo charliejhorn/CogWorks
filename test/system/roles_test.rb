@@ -1,9 +1,7 @@
 require "application_system_test_case"
 
 class RolesTest < ApplicationSystemTestCase
-  setup do
-    @role = roles(:one)
-  end
+  setup { @role = roles(:one) }
 
   test "visiting the index" do
     visit roles_url

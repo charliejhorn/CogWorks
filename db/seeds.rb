@@ -16,13 +16,13 @@ ActiveRecord::Base.transaction do
     admin_role = Role.find_or_create_by!(name: "admin", description: "an administrator")
 
     # Create users
-    mechanic1 = User.create!(email: "mechanic1@gmail.com", password_hash: "bcrypt::1234")
+    mechanic1 = User.create!(name: "Peter", email: "mechanic1@gmail.com", password_hash: "bcrypt::1234")
     mechanic1.roles << mechanic_role
 
-    mechanic2 = User.create!(email: "mechanic2@gmail.com", password_hash: "bcrypt::5678")
+    mechanic2 = User.create!(name: "Sue", email: "mechanic2@gmail.com", password_hash: "bcrypt::5678")
     mechanic2.roles << mechanic_role
 
-    admin = User.create!(email: "admin@gmail.com", password_hash: "bcrypt::9999")
+    admin = User.create!(name: "Angela", email: "admin@gmail.com", password_hash: "bcrypt::9999")
     admin.roles << admin_role
 
     # Create customers

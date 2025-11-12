@@ -12,17 +12,37 @@ require "date"
 
 ActiveRecord::Base.transaction do
     # Create roles
-    mechanic_role = Role.find_or_create_by!(name: "mechanic", description: "a staff member who's a mechanic")
-    admin_role = Role.find_or_create_by!(name: "admin", description: "an administrator")
+    mechanic_role =
+        Role.find_or_create_by!(
+            name: "mechanic",
+            description: "a staff member who's a mechanic"
+        )
+    admin_role =
+        Role.find_or_create_by!(name: "admin", description: "an administrator")
 
     # Create users
-    mechanic1 = User.create!(name: "Peter", email: "mechanic1@gmail.com", password_hash: "bcrypt::1234")
+    mechanic1 =
+        User.create!(
+            name: "Peter",
+            email: "mechanic1@gmail.com",
+            password_hash: "bcrypt::1234"
+        )
     mechanic1.roles << mechanic_role
 
-    mechanic2 = User.create!(name: "Sue", email: "mechanic2@gmail.com", password_hash: "bcrypt::5678")
+    mechanic2 =
+        User.create!(
+            name: "Sue",
+            email: "mechanic2@gmail.com",
+            password_hash: "bcrypt::5678"
+        )
     mechanic2.roles << mechanic_role
 
-    admin = User.create!(name: "Angela", email: "admin@gmail.com", password_hash: "bcrypt::9999")
+    admin =
+        User.create!(
+            name: "Angela",
+            email: "admin@gmail.com",
+            password_hash: "bcrypt::9999"
+        )
     admin.roles << admin_role
 
     # Create customers
@@ -40,32 +60,72 @@ ActiveRecord::Base.transaction do
     # Hannah: 1 bike, 1 job
     hannah = created_customers[0]
     norco = hannah.bikes.create!(description: "blue norco")
-    job1 = norco.jobs.create!(customer: hannah, due_date: DateTime.now, cost: 50, status: "open")
+    job1 =
+        norco.jobs.create!(
+            customer: hannah,
+            due_date: DateTime.now,
+            cost: 50,
+            status: "open"
+        )
 
     # John: 2 bikes, 2 jobs
     john = created_customers[1]
     trek = john.bikes.create!(description: "red trek")
     giant = john.bikes.create!(description: "green giant")
-    job2 = trek.jobs.create!(customer: john, due_date: DateTime.now + 1.day, cost: 100, status: "in_progress")
-    job3 = giant.jobs.create!(customer: john, due_date: DateTime.now + 2.days, cost: 75, status: "completed")
+    job2 =
+        trek.jobs.create!(
+            customer: john,
+            due_date: DateTime.now + 1.day,
+            cost: 100,
+            status: "in_progress"
+        )
+    job3 =
+        giant.jobs.create!(
+            customer: john,
+            due_date: DateTime.now + 2.days,
+            cost: 75,
+            status: "completed"
+        )
 
     # Mary: 1 bike, 1 job
     mary = created_customers[2]
     specialized = mary.bikes.create!(description: "black specialized")
-    job4 = specialized.jobs.create!(customer: mary, due_date: DateTime.now + 3.days, cost: 200, status: "open")
+    job4 =
+        specialized.jobs.create!(
+            customer: mary,
+            due_date: DateTime.now + 3.days,
+            cost: 200,
+            status: "open"
+        )
 
     # Bob: 3 bikes, 1 job
     bob = created_customers[3]
     cannondale1 = bob.bikes.create!(description: "yellow cannondale")
     bob.bikes.create!(description: "blue cannondale")
     bob.bikes.create!(description: "red cannondale")
-    job5 = cannondale1.jobs.create!(customer: bob, due_date: DateTime.now + 4.days, cost: 150, status: "pending")
+    job5 =
+        cannondale1.jobs.create!(
+            customer: bob,
+            due_date: DateTime.now + 4.days,
+            cost: 150,
+            status: "pending"
+        )
 
     # Alice: 1 bike, 2 jobs
     alice = created_customers[4]
     santa_cruz = alice.bikes.create!(description: "orange santa cruz")
-    santa_cruz.jobs.create!(customer: alice, due_date: DateTime.now + 5.days, cost: 80, status: "open")
-    santa_cruz.jobs.create!(customer: alice, due_date: DateTime.now + 6.days, cost: 60, status: "in_progress")
+    santa_cruz.jobs.create!(
+        customer: alice,
+        due_date: DateTime.now + 5.days,
+        cost: 80,
+        status: "open"
+    )
+    santa_cruz.jobs.create!(
+        customer: alice,
+        due_date: DateTime.now + 6.days,
+        cost: 60,
+        status: "in_progress"
+    )
 
     # Create notes
     # Job1: 2 notes (mechanic1 and mechanic2)
@@ -87,6 +147,6 @@ ActiveRecord::Base.transaction do
     # Mechanic1 has 3 notes total (already 2, add 1 more)
     mechanic1.notes.create!(job: job4, text: "Additional note by mechanic1")
 
-  # Mechanic2 has 2 notes (already 2)
-  # Admin has 1 note
+    # Mechanic2 has 2 notes (already 2)
+    # Admin has 1 note
 end
